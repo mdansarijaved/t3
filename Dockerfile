@@ -3,14 +3,22 @@ FROM node:20-bullseye AS base
 FROM base AS builder
 
 WORKDIR /app
+
+# Copy package files first
 COPY package.json package-lock.json* ./
+
+# Copy prisma schema before npm install
+COPY prisma ./prisma/
+
+# Install dependencies
 RUN npm ci --legacy-peer-deps
-COPY prisma /app/prisma
+
+# Copy remaining files
 COPY . .
+
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ARG ENV_FILE
-
 
 COPY $ENV_FILE .env
 
