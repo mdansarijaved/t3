@@ -33,7 +33,7 @@ services:
     image: ghcr.io/${GITHUB_USERNAME}/t3:prod
     labels:
       - "traefik.enable=true"
-      - u=Host(`${SITE_URL}`)"
+      - "traefik.http.routers.trekyaari.rule=Host(`${SITE_URL}`)"
       - "traefik.http.routers.trekyaari.entrypoints=websecure"
       - "traefik.http.routers.trekyaari.tls.certresolver=myresolver"
       - "com.centurylinklabs.watchtower.enable=true"
