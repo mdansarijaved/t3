@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.image {
+  animation-name: divImage;
+  animation-duration: 2s;
+}
+
+@keyframes divImage {
+  0% {
+    left: 33.3%;
+    top: 33.3%;
+  }
+
+  100% {
+    left: 25%;
+    top: 25%;
+  }
+}
