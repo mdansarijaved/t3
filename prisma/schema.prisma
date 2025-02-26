@@ -59,10 +59,18 @@ model User {
     name          String?
     email         String?   @unique
     emailVerified DateTime?
+    referralToken String    @unique @default(uuid())
     image         String?
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+}
+
+model Compoenent {
+    id        String   @id @default(cuid())
+    component String
+    name      String
+    createdAt DateTime @default(now())
 }
 
 model VerificationToken {
