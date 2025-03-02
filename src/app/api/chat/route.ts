@@ -11,6 +11,7 @@ interface ChatRequest {
 
 export async function POST(req: Request) {
   const { messages } = (await req.json()) as ChatRequest;
+  console.log("Message length", messages?.length);
 
   const result = streamText({
     model: google("gemini-2.0-flash-001"),
@@ -34,63 +35,8 @@ export async function POST(req: Request) {
        - Specify timezone when relevant
     
     Remember to maintain a professional and friendly tone while being informative.`,
-    tools: {
-      weather: tool({
-        description: "Get the weather in a location",
-        parameters: z.object({
-          location: z.string().describe("The location to get the weather for"),
-        }),
-        execute: async ({ location }) => ({
-          location,
-          temperature: 72 + Math.floor(Math.random() * 21) - 10,
-        }),
-      }),
-      product: tool({
-        description: "This gets you all the products.",
-        parameters: z.object({}),
-        execute: async () => {
-          return [""];
-        },
-      }),
-      getDateAndTime: tool({
-        description: "Gives current Date and Time.",
-        parameters: z.object({}),
-        execute: async () => {
-          const date = new Date();
-          return [date.toDateString(), date.toTimeString()];
-        },
-      }),
-      getEmailsAddress: tool({
-        description:
-          "Gives you email addresses of user contacts with relations",
-        parameters: z.object({}),
-        execute: async () => {
-          const ListOfEmails = [
-            {
-              email: "javedans2003@gmail.com",
-              relation: "Homie or friend and also coworker",
-            },
-            {
-              email: "javedwork2003@gmail.com",
-              relation: "coworker",
-            },
-            {
-              email: "javedwhatever2003@gmail.com",
-              relation: "Dad home",
-            },
-            {
-              email: "dadwork2003@gmail.com",
-              relation: "dad work email",
-            },
-            {
-              email: "mom@gmail.com",
-              relation: "mom",
-            },
-          ];
-          return ListOfEmails;
-        },
-      }),
-    },
+    tools: {},
+
     maxSteps: 10,
     messages,
   });

@@ -3,7 +3,7 @@ import { Send } from "lucide-react";
 import React, { useEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
 import { cn } from "~/lib/utils";
-import { ScrollArea } from "~/components/ui/scroll-area";
+import { ScrollArea } from "~/app/_components/ui/scroll-area";
 import Markdown from "react-markdown";
 
 function ChatPage() {
@@ -25,6 +25,7 @@ function ChatPage() {
     );
   };
 
+  console.log("messages: ", messages);
   return (
     <div className="flex h-screen w-full flex-col">
       <div className="w-full border-b py-4 text-center text-3xl font-semibold capitalize">

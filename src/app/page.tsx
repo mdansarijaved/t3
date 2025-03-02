@@ -1,11 +1,11 @@
 import React from "react";
+import { api } from "~/trpc/server";
 
-function Home() {
-  return (
-    <div className="flex w-full">
-      <div className="flex-1"></div>
-    </div>
-  );
+async function Home() {
+  // const response = await api.post.justChecking({ messages: ["hello"] });
+  // = await api.post.hello({ text: "Hello" });
+
+  return <div className="">{}</div>;
 }
 
 export default Home;
