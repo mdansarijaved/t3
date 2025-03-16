@@ -1,11 +1,16 @@
 import React from "react";
-import { api } from "~/trpc/server";
+
+import { LatestPost } from "./_components/post";
 
 async function Home() {
   // const response = await api.post.justChecking({ messages: ["hello"] });
   // = await api.post.hello({ text: "Hello" });
 
-  return <div className="">{}</div>;
+  return (
+    <div className="">
+      <LatestPost />
+    </div>
+  );
 }
 
 export default Home;

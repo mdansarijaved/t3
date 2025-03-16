@@ -50,32 +50,6 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    chat          Chat[]
-}
-
-enum CoreMessage {
-    CoreSystemMessage
-    CoreUserMessage
-    CoreAssistantMessage
-    CoreToolMessage
-}
-
-model Chat {
-    id        String     @id @default(cuid())
-    title     String
-    messages  Messages[]
-    createdAt DateTime   @default(now())
-    User      User?      @relation(fields: [userId], references: [id])
-    userId    String?
-}
-
-model Messages {
-    id        String      @id @default(cuid())
-    sender    CoreMessage
-    message   String
-    createdAt DateTime    @default(now())
-    Chat      Chat?       @relation(fields: [chatId], references: [id])
-    chatId    String?
 }
 
 model VerificationToken {
