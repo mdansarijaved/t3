@@ -3,10 +3,10 @@
 import { api } from "~/trpc/react";
 
 export function LatestPost() {
-  const chat = api.user.getUsers.useQuery({
+  const [data] = api.user.getUsers.useSuspenseQuery({
     text: "Javed",
   });
-  console.log("data: ", chat.data);
+  console.log("data: ", data);
 
-  return <div className="w-full max-w-xs">Hello</div>;
+  return <div className="w-full max-w-xs">{JSON.stringify(data)}</div>;
 }

@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["views"]
 }
 
 datasource db {
@@ -12,6 +13,29 @@ datasource db {
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
+}
+
+enum Role {
+    USER
+    MODERATOR
+    ADMIN
+}
+
+enum Priority {
+    LOW
+    MEDIUM
+    HIGH
+    CRITICAL
+}
+
+enum Status {
+    PLANNED
+    OPEN
+    INPROGRESS
+    COMPLETED
+    BLOCKED
+    BACKLOG
+    CANCELLED
 }
 
 model Account {
@@ -50,6 +74,9 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+
+    Members       Member[]
+    Organisations Organisation[]
 }
 
 model VerificationToken {
@@ -58,4 +85,94 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Organisation {
+    id        String    @id @default(cuid())
+    name      String
+    slug      String    @unique
+    owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId   String
+    members   Member[]
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Project   Project[]
+
+    @@index([ownerId], name: "ownerId")
+    @@index([name], name: "name")
+    @@index([slug], name: "slug")
+}
+
+model Project {
+    id             String       @id @default(cuid())
+    name           String
+    description    String
+    resources      Resource[]
+    teamMembers    Member[]
+    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+    organisationId String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
+    issues         Issue[]
+}
+
+model Resource {
+    id          String   @id @default(cuid())
+    title       String
+    link        String
+    description String
+    project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId   String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@index([projectId], name: "projectId")
+}
+
+model Issue {
+    id           String    @id @default(cuid())
+    title        String
+    description  String
+    comments     Comment[]
+    assignedTo   Member?   @relation(fields: [assignedToId], references: [id])
+    assignedToId String?
+    priority     Priority
+    status       Status
+    project      Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId    String
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+
+    @@index([assignedToId, projectId])
+}
+
+model Comment {
+    id        String   @id @default(cuid())
+    comment   String
+    member    Member   @relation(fields: [memberId], references: [id])
+    memberId  String
+    issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+    issueId   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([memberId], name: "memberId")
+    @@index([issueId], name: "issueId")
+}
+
+model Member {
+    id             String       @id @default(cuid())
+    user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId         String
+    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+    organisationId String
+    role           Role
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
+    Issues         Issue[]
+    Project        Project?     @relation(fields: [projectId], references: [id])
+    projectId      String?
+    Comment        Comment[]
+
+    @@index([userId, organisationId], name: "user_org")
 }

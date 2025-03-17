@@ -1,15 +1,14 @@
 import React from "react";
-
-import { LatestPost } from "./_components/post";
+import { HydrateClient } from "~/trpc/server";
+import HeroSection from "~/components/hero-section";
 
 async function Home() {
-  // const response = await api.post.justChecking({ messages: ["hello"] });
-  // = await api.post.hello({ text: "Hello" });
-
+  // void api.user.getUsers.prefetch({ text: "javed" });
+  // const session = await auth();
   return (
-    <div className="">
-      <LatestPost />
-    </div>
+    <HydrateClient>
+      <HeroSection />
+    </HydrateClient>
   );
 }
 
