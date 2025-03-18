@@ -1,14 +1,35 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { OrganisationRepository } from "~/server/repository/organisaion";
 
 export const orgRouter = createTRPCRouter({
-  getUsers: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(async ({ input, ctx }) => {
-      //   await new Promise((resolve) => setTimeout(resolve, 1000));
-      //   const users = await ctx.db.user.findMany();
-      //   return { input, users };
-      return input;
+  getOrganisations: protectedProcedure
+    .input(z.object({}))
+    .query(async ({ ctx, input }) => {
+      const id = ctx.session.user.id;
+      const teams = await OrganisationRepository.getOrgansiationByUserID(id);
+      if (!teams) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No organisations found",
+        });
+      }
+      return teams;
+    }),
+  getOrgansation: protectedProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const organisation = await OrganisationRepository.getOrganisation(
+        input.slug,
+      );
+      if (!organisation) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Organisation not found",
+        });
+      }
+      return organisation;
     }),
 });

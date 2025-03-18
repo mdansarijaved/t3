@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 import { organisationSchema } from "~/zod/schema";
@@ -12,6 +13,9 @@ export async function createOrganisation(prevState: unknown, form: FormData) {
 
   const session = await auth();
 
+  if (!session) {
+    return;
+  }
   const validatedFields = organisationSchema.safeParse(orgdata);
 
   if (validatedFields.error) {
@@ -22,6 +26,18 @@ export async function createOrganisation(prevState: unknown, form: FormData) {
       fieldData: orgdata,
     };
   }
+
+  const slug = `${orgdata.name}${crypto.randomUUID()}`;
+
+  const org = await db.organisation.create({
+    data: {
+      name: orgdata.name,
+      slug,
+      ownerId: session?.user.id,
+    },
+  });
+
+  redirect(`/dashboard/${org.slug}`);
 
   return {
     success: true,

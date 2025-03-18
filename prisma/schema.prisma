@@ -67,11 +67,11 @@ model Session {
 
 model User {
     id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
+    name          String
+    email         String    @unique
     emailVerified DateTime?
     referralToken String    @unique @default(uuid())
-    image         String?
+    image         String
     accounts      Account[]
     sessions      Session[]
 

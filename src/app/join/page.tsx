@@ -30,7 +30,7 @@ function CreateOrganisation() {
 
         <form
           action={formAction}
-          className="w-full max-w-md space-y-3 rounded-lg border p-6"
+          className="w-full max-w-md space-y-3 rounded-lg border p-6 shadow-md"
         >
           <div>
             <Label htmlFor="name">Name</Label>
@@ -63,7 +63,7 @@ function CreateOrganisation() {
             )}
           </div>
           <Button disabled={isPending} className="w-full">
-            submit
+            Create
           </Button>
         </form>
       </div>

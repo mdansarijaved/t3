@@ -10,8 +10,7 @@ export default function LoginPage() {
       <form
         action={async () => {
           "use server";
-          await signIn("google");
-          redirect("/join");
+          await signIn("google", { redirectTo: "/dashboard" });
         }}
         className="m-auto h-fit w-full max-w-sm"
       >
