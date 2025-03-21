@@ -7,7 +7,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex w-full justify-between gap-2 bg-sidebar p-2 font-mono">
+    <div className="flex w-full justify-between gap-2 bg-sidebar p-2">
       <SidebarProvider>
         <AppSidebar />
         <main className="flex-1 rounded-lg py-2">

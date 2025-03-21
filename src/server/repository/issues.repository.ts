@@ -26,14 +26,30 @@ export class IssueRepository {
             user: {
               select: {
                 name: true,
+                image: true,
               },
             },
           },
         },
         priority: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     console.timeEnd("getIssuesByOrganisation");
     return issues;
+  }
+
+  static async getIssuesCount(slug: string) {
+    return await db.issue.count({
+      where: {
+        project: {
+          organisation: {
+            slug,
+          },
+        },
+      },
+    });
   }
 }

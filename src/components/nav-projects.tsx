@@ -27,7 +27,7 @@ export function NavProjects({ projects }: { projects: Project[] }) {
   const params = useParams();
   const { slug } = params;
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+    <SidebarGroup className="text-sm group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
@@ -35,6 +35,7 @@ export function NavProjects({ projects }: { projects: Project[] }) {
             <SidebarMenuButton asChild>
               <Link
                 href={`/dashboard/${slug as string}/project/${item.projectslug}`}
+                className="text-xs"
               >
                 <Folder className="text-muted-foreground" />
                 <span>{item.name}</span>

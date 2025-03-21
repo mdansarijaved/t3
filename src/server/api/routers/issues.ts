@@ -5,7 +5,11 @@ import { IssueRepository } from "~/server/repository/issues.repository";
 
 export const issueRouter = createTRPCRouter({
   getIssuesByOrganisation: publicProcedure
-    .input(z.object({ slug: z.string() }))
+    .input(
+      z.object({
+        slug: z.string(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const id = ctx.session?.user.id;
       if (!id) {
@@ -16,12 +20,7 @@ export const issueRouter = createTRPCRouter({
       }
 
       const issues = await IssueRepository.getIssuesByOrganisation(input.slug);
-      if (!issues?.length) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "No issues found",
-        });
-      }
+
       return issues;
     }),
 });

@@ -8,17 +8,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
 import { useState } from "react";
-import { Button } from "~/components/ui/button";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "~/components/ui/pagination";
 
 import {
   Table,
@@ -28,6 +19,17 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "~/components/ui/pagination";
+import { Button } from "~/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,6 +44,7 @@ export function TasksTable<TData, TValue>({
     pageIndex: 0,
     pageSize: 10,
   });
+
   const table = useReactTable({
     data,
     columns,
@@ -99,34 +102,48 @@ export function TasksTable<TData, TValue>({
       </Table>
 
       <div className="flex w-full items-center justify-between border-t px-4 py-1 text-center">
-        <span className="flex items-center justify-center text-muted-foreground">
-          {table.getPaginationRowModel().rows?.length} rows
+        <span className="flex items-center justify-center text-sm text-muted-foreground">
+          {table.getCoreRowModel().rows.length} rows
         </span>
         <div>
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <div className="flex items-center justify-center gap-2">
+            <Button
+              variant="outline"
+              disabled={!table.getCanPreviousPage()}
+              onClick={() => table.previousPage()}
+              size="sm"
+            >
+              Previous
+            </Button>
+            <Button variant="link" size="sm">
+              {table.getState().pagination.pageIndex + 1}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              size="sm"
+            >
+              {table.getState().pagination.pageIndex + 2}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              size="sm"
+            >
+              {table.getState().pagination.pageIndex + 3}
+            </Button>
+            <PaginationEllipsis />
+            <Button
+              variant="outline"
+              disabled={!table.getCanNextPage()}
+              onClick={() => table.nextPage()}
+              size="sm"
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>

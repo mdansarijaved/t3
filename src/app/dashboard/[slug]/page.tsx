@@ -7,7 +7,9 @@ const fetcher = async (slug: string) => {
   const data = await api.issue.getIssuesByOrganisation({ slug });
   return data;
 };
+
 export type Data = Awaited<ReturnType<typeof fetcher>>[number];
+
 async function OrgDashboard({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const data = await fetcher(slug);
