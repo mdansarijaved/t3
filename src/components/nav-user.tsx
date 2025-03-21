@@ -31,7 +31,6 @@ import { api } from "~/trpc/react";
 export function NavUser() {
   const { isMobile } = useSidebar();
 
-  // Only fetch user data if `session.user.id` is available
   const { data: user, isLoading } = api.user.getUser.useQuery({});
 
   const userName = user?.name ?? "Guest";

@@ -47,21 +47,7 @@ function CreateOrganisation() {
               </span>
             )}
           </div>
-          <div>
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
-              type="text"
-              name="description"
-              defaultValue={message?.fieldData?.description}
-              className={`${message?.error?.description ? "border-red-500" : ""}`}
-            />
-            {message?.error?.description && (
-              <span className="text-xs text-red-500">
-                {message?.error?.description[0]}
-              </span>
-            )}
-          </div>
+
           <Button disabled={isPending} className="w-full">
             Create
           </Button>

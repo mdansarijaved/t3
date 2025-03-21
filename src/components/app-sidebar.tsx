@@ -25,43 +25,25 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar";
+import { useParams } from "next/navigation";
+import { api } from "~/trpc/react";
 
 const data = {
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
+      title: "Workspace",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Projects",
         },
         {
           title: "Starred",
-          url: "#",
         },
         {
           title: "Settings",
-          url: "#",
         },
       ],
     },
@@ -72,15 +54,12 @@ const data = {
       items: [
         {
           title: "Genesis",
-          url: "#",
         },
         {
           title: "Explorer",
-          url: "#",
         },
         {
           title: "Quantum",
-          url: "#",
         },
       ],
     },
@@ -91,19 +70,15 @@ const data = {
       items: [
         {
           title: "Introduction",
-          url: "#",
         },
         {
           title: "Get Started",
-          url: "#",
         },
         {
           title: "Tutorials",
-          url: "#",
         },
         {
           title: "Changelog",
-          url: "#",
         },
       ],
     },
@@ -114,51 +89,37 @@ const data = {
       items: [
         {
           title: "General",
-          url: "#",
         },
         {
           title: "Team",
-          url: "#",
         },
         {
           title: "Billing",
-          url: "#",
         },
         {
           title: "Limits",
-          url: "#",
         },
       ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const params = useParams();
+  console.log("params", params);
+  const { slug } = params;
+  const { data: activeOrganisation, isLoading } =
+    api.organisation.getOrgansationByslug.useQuery({
+      slug: slug as string,
+    });
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain items={data.navMain} slug={slug as string} />
+        <NavProjects projects={activeOrganisation?.Project ?? []} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

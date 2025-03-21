@@ -91,42 +91,42 @@ model Organisation {
     id        String    @id @default(cuid())
     name      String
     slug      String    @unique
-    owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    owner     User      @relation(fields: [ownerId], references: [id])
     ownerId   String
     members   Member[]
+    starred   Boolean   @default(false)
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
     Project   Project[]
-
-    @@index([ownerId], name: "ownerId")
-    @@index([name], name: "name")
-    @@index([slug], name: "slug")
 }
 
 model Project {
     id             String       @id @default(cuid())
     name           String
-    description    String
+    description    String?
     resources      Resource[]
     teamMembers    Member[]
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
+    starred        Boolean      @default(false)
+    projectslug    String       @unique
     createdAt      DateTime     @default(now())
     updatedAt      DateTime     @updatedAt
     issues         Issue[]
+
+    @@index([projectslug], name: "projectslug")
 }
 
 model Resource {
     id          String   @id @default(cuid())
     title       String
-    link        String
-    description String
+    link        String?
+    description String?
+    content     String?
     project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
     projectId   String
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-
-    @@index([projectId], name: "projectId")
 }
 
 model Issue {
@@ -142,8 +142,6 @@ model Issue {
     projectId    String
     createdAt    DateTime  @default(now())
     updatedAt    DateTime  @updatedAt
-
-    @@index([assignedToId, projectId])
 }
 
 model Comment {
@@ -155,9 +153,6 @@ model Comment {
     issueId   String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    @@index([memberId], name: "memberId")
-    @@index([issueId], name: "issueId")
 }
 
 model Member {
@@ -173,6 +168,4 @@ model Member {
     Project        Project?     @relation(fields: [projectId], references: [id])
     projectId      String?
     Comment        Comment[]
-
-    @@index([userId, organisationId], name: "user_org")
 }

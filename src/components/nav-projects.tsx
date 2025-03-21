@@ -1,12 +1,9 @@
 "use client";
 
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-  type LucideIcon,
-} from "lucide-react";
+import type { Project } from "@prisma/client";
+import { Folder, Forward, MoreHorizontal, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import {
   DropdownMenu,
@@ -25,17 +22,10 @@ import {
   useSidebar,
 } from "~/components/ui/sidebar";
 
-export function NavProjects({
-  projects,
-}: {
-  projects: {
-    name: string;
-    url: string;
-    icon: LucideIcon;
-  }[];
-}) {
+export function NavProjects({ projects }: { projects: Project[] }) {
   const { isMobile } = useSidebar();
-
+  const params = useParams();
+  const { slug } = params;
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
@@ -43,10 +33,12 @@ export function NavProjects({
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
-                <item.icon />
+              <Link
+                href={`/dashboard/${slug as string}/project/${item.projectslug}`}
+              >
+                <Folder className="text-muted-foreground" />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

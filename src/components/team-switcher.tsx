@@ -18,19 +18,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
+import Link from "next/link";
 import { api } from "~/trpc/react";
-import { useParams } from "next/navigation";
 
-export function TeamSwitcher({}: {}) {
+export function TeamSwitcher() {
   const { isMobile } = useSidebar();
-  const params = useParams();
-  const slug = params.slug as string;
-  const { data: organisation } = api.organisation.getOrgansation.useQuery({
-    slug,
-  });
   const { data: teams, isLoading } = api.organisation.getOrganisations.useQuery(
     {},
   );
+
   const [activeTeam, setActiveTeam] = React.useState(teams?.[0]);
 
   if (isLoading) {
@@ -59,12 +55,12 @@ export function TeamSwitcher({}: {}) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                 <AudioWaveform className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {organisation?.name}
+                  {activeTeam?.name ?? teams?.[0]?.name}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto" />
@@ -80,17 +76,18 @@ export function TeamSwitcher({}: {}) {
               Teams
             </DropdownMenuLabel>
             {teams?.map((team, index) => (
-              <DropdownMenuItem
-                key={team.name}
-                onClick={() => setActiveTeam(team)}
-                className="gap-2 p-2"
-              >
-                <div className="flex size-6 items-center justify-center rounded-sm border">
-                  <AudioWaveform className="size-4 shrink-0" />
-                </div>
-                {team.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-              </DropdownMenuItem>
+              <Link href={`/dashboard/${team.slug}`} key={team.name}>
+                <DropdownMenuItem
+                  onClick={() => setActiveTeam(team)}
+                  className="gap-2 p-2"
+                >
+                  <div className="flex size-6 items-center justify-center rounded-sm border">
+                    <AudioWaveform className="size-4 shrink-0" />
+                  </div>
+                  {team.name}
+                  <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </Link>
             ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem className="gap-2 p-2">

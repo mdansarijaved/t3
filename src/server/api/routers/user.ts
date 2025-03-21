@@ -3,7 +3,7 @@ import { signOut } from "next-auth/react";
 import { set, z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { UserRepository } from "~/server/repository/user";
+import { UserRepository } from "~/server/repository/user.repository";
 
 export const userRouter = createTRPCRouter({
   getUser: publicProcedure.input(z.object({})).query(async ({ input, ctx }) => {
