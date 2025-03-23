@@ -108,16 +108,17 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function ProjectSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   const params = useParams();
-  console.log("params", params);
   const { slug } = params;
-  const { data: activeOrganisation, isLoading } =
+  const { data: activeOrganisation } =
     api.organisation.getOrgansationByslug.useQuery({
       slug: slug as string,
     });
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar side="right" collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher />
       </SidebarHeader>

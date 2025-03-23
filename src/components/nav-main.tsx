@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight, Plus, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 import {
@@ -29,6 +29,7 @@ export function NavMain({
     isActive?: boolean;
     items?: {
       title: string;
+      link: string;
     }[];
   }[];
   slug: string;
@@ -57,7 +58,7 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <Link href={`/dashboard/${slug}/${subItem.title}`}>
+                        <Link href={`/dashboard/${slug}${subItem.link}`}>
                           <span>{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>

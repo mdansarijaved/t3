@@ -1,44 +1,34 @@
 "use client";
 import type { Priority, Status } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Edit, Trash } from "lucide-react";
+import { CheckIcon, Edit, Ellipsis, ListFilter, Trash } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import type { Data } from "~/app/dashboard/[slug]/page";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
+
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "~/components/ui/select";
+
+import PriorityFilter from "./priorityFilter";
+import { Separator } from "~/components/ui/separator";
 
 export const column: ColumnDef<Data>[] = [
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && "indeterminate")
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
   {
     accessorKey: "title",
-    header: "Title",
+    header: ({ column }) => {
+      return (
+        <div className="flex cursor-pointer items-center justify-between">
+          <div>Title</div>
+          <Separator orientation="vertical" className="h-7" />
+        </div>
+      );
+    },
     cell: ({ row }) => {
       return (
         <Link href={`#`} className="text-sm underline">
@@ -46,15 +36,16 @@ export const column: ColumnDef<Data>[] = [
         </Link>
       );
     },
+    sortingFn: "alphanumeric",
   },
   {
     accessorKey: "priority",
-    header: "Priority",
+    header: ({ column }) => {
+      return <PriorityFilter />;
+    },
     cell: ({ row }) => {
       const priority: Priority = row.getValue("priority");
-      return (
-        <span className="text-xs capitalize">{priority.toLowerCase()}</span>
-      );
+      return <div className="text-xs capitalize">{priority.toLowerCase()}</div>;
     },
   },
   {
@@ -62,25 +53,32 @@ export const column: ColumnDef<Data>[] = [
     header: ({ column }) => {
       console.log("column", column);
       return (
-        <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <span className="text-xs capitalize">Status</span>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem
-                onClick={() => column.toggleSorting(column.id === "OPEN")}
-              >
-                Open
-              </DropdownMenuItem>
-              <DropdownMenuItem>Backlog</DropdownMenuItem>
-              <DropdownMenuItem>Blocked</DropdownMenuItem>
-              <DropdownMenuItem>Cancelled</DropdownMenuItem>
-              <DropdownMenuItem>Completed</DropdownMenuItem>
-              <DropdownMenuItem>In Progress</DropdownMenuItem>
-              <DropdownMenuItem>Planned</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex items-center justify-between">
+          <div>Status</div>
+          <div>
+            <Select>
+              <SelectTrigger className="justify-start gap-4 rounded-none border-none focus:outline-none focus-visible:ring-0">
+                <div className="flex items-center justify-between gap-1">
+                  <ListFilter />
+                  <Separator orientation="vertical" className="h-7" />
+                </div>
+              </SelectTrigger>
+              <SelectContent className="rounded-none">
+                <SelectItem
+                  value="BACKLOG"
+                  onClick={() => column.getIsSorted()}
+                >
+                  BACKLOG
+                </SelectItem>
+                <SelectItem value="OPEN">OPEN</SelectItem>
+                <SelectItem value="BLOCKED">BLOCKED</SelectItem>
+                <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                <SelectItem value="COMPLETED">COMPLETED</SelectItem>
+                <SelectItem value="INPROGRESS">INPROGRESS</SelectItem>
+                <SelectItem value="PLANNED">PLANNED</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       );
     },
@@ -111,7 +109,14 @@ export const column: ColumnDef<Data>[] = [
   },
   {
     accessorKey: "assignedTo",
-    header: "Assigned To",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-between">
+          <div>Assigned To</div>
+          <Separator orientation="vertical" className="h-7" />
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const data: {
         user: {
@@ -141,20 +146,7 @@ export const column: ColumnDef<Data>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            className="h-8 w-8"
-            onClick={() => row.toggleSelected(!!row.getIsSelected())}
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            className="h-8 w-8"
-            onClick={() => row.toggleSelected(!!row.getIsSelected())}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
+          <Ellipsis strokeWidth={2} />
         </div>
       );
     },

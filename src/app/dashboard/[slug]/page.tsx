@@ -1,6 +1,6 @@
 import React from "react";
-import { TasksTable } from "~/app/_components/dashboard/data-table";
-import { column } from "~/app/_components/dashboard/column";
+import { TasksTable } from "~/components/dashboard/data-table";
+import { column } from "~/components/dashboard/column";
 import { api } from "~/trpc/server";
 
 const fetcher = async (slug: string) => {

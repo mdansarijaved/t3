@@ -8,6 +8,9 @@ export class ProjectRepository {
           slug: slug,
         },
       },
+      orderBy: {
+        starred: "desc",
+      },
     });
   }
 }
